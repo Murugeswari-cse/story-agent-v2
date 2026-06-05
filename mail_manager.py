@@ -1,21 +1,22 @@
 import smtplib
+import streamlit as st
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from config import SENDER_EMAIL, EMAIL_APP_PASSWORD
 
 def send_story_to_gmail(story_content):
+    sender_email = st.secrets["SENDER_EMAIL"]
+    email_password = st.secrets["EMAIL_APP_PASSWORD"]
     msg = MIMEMultipart()
-    msg['From'] = SENDER_EMAIL
-    msg['To'] = SENDER_EMAIL
+    msg['From'] = sender_email
+    msg['To'] = sender_email
     msg['Subject'] = "✨ Story Agent V2"
-    msg.attach(MIMEText(f"Hi Madhu!\n\n{story_content}", 'plain'))
-    
+    msg.attach(MIMEText(f"Hi Murugeswari!\n\n{story_content}", 'plain'))
     try:
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(SENDER_EMAIL, EMAIL_APP_PASSWORD)
-        server.sendmail(SENDER_EMAIL, SENDER_EMAIL, msg.as_string())
+        server.login(sender_email, email_password)
+        server.sendmail(sender_email, sender_email, msg.as_string())
         server.quit()
-        print("✅ Email sent!")
-    except Exception as e:
-        print(f"❌ Error: {e}")
+        return True
+    except:
+        return False
